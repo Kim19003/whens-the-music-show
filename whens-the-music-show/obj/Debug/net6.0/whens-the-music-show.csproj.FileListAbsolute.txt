@@ -1,0 +1,17 @@
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\whens-the-music-show.exe
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\whens-the-music-show.deps.json
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\whens-the-music-show.runtimeconfig.json
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\whens-the-music-show.dll
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\ref\whens-the-music-show.dll
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\whens-the-music-show.pdb
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.csproj.AssemblyReference.cache
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.AssemblyInfoInputs.cache
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.AssemblyInfo.cs
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.csproj.CoreCompileInputs.cache
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.dll
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\ref\whens-the-music-show.dll
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.pdb
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.genruntimeconfig.cache
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.csproj.CopyComplete

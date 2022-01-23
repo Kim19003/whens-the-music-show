@@ -1,2 +1,1 @@
-# whens-the-music-show
-Shows all k-pop music show air times, and shows the previous music show winners within a week.
+<img src="https://i.imgur.com/Myw9kgd.png" width="580" title="The software">
