@@ -6,6 +6,18 @@ using System.Threading.Tasks;
 
 namespace whens_the_music_show
 {
+    internal class ProgramData
+    {
+        public string Creator { get; }
+        public double Version { get; }
+
+        public ProgramData(string creator, double version)
+        {
+            Creator = creator;
+            Version = version;
+        }
+    }
+
     internal class MusicShow
     {
         public string Name { get; set; }

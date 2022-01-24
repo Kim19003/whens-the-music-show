@@ -1,7 +1,14 @@
 ﻿using Newtonsoft.Json;
+using System.Diagnostics;
 using whens_the_music_show;
 
-int timeZoneDifference = -7;
+ProcessStartInfo psi = new();
+
+// -- Changeable --
+int timeZoneDifference = -7; // Change timezone difference here
+
+psi.FileName = @"C:\Program Files\Mozilla Firefox\firefox.exe"; // Change browser location here
+// ----------------
 
 MusicShow TheShow = new MusicShow(
         "The Show", "SBS",
@@ -36,12 +43,19 @@ MusicShow Inkigayo = new MusicShow(
 
 MusicShow[] musicShows = { TheShow, ShowChampion, MCountdown, MusicBank, ShowMusicCore, Inkigayo };
 
+ProgramData programData = new("Kim19003", 1.0);
+
 while (true)
 {
     Header();
 
     Console.ForegroundColor = ConsoleColor.White;
-    Console.WriteLine("(1) Show all music shows\n(2) Show the next music show\n(3) Show music show winners");
+    Console.WriteLine(
+            "(1) Show all music show airing times\n" +
+            "(2) Show the next music show airing time\n" +
+            "(3) Show music show performances and winner\n" +
+            "(A) About the program"
+        );
     ConsoleKey selection = Console.ReadKey().Key;
 
     switch (selection)
@@ -61,9 +75,16 @@ while (true)
         case ConsoleKey.D3:
             Console.Clear();
             Header();
-            await TryGetWinner(musicShows);
+            await TryGetWinner(musicShows, psi);
             Console.ReadKey();
             break;
+        case ConsoleKey.A:
+            Console.Clear();
+            Header();
+            AboutTheProgram(programData);
+            Console.ReadKey();
+            break;
+
     }
 
     Console.Clear();
@@ -100,7 +121,7 @@ static void ShowAllMusicShows(MusicShow[] musicShows)
         }
         else
         {
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Yellow;
         }
 
         Console.WriteLine($"{musicShows[i].StartTime.DayOfWeek}: {musicShows[i].Name} ({musicShows[i].StartTime:g})");
@@ -142,13 +163,13 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
         }
         else if (nextShow.StartTime.Day > now.Day) // One day difference
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"'{nextShow.Name}' airs tomorrow ({nextShow.StartTime.DayOfWeek.ToString().ToLower()}) at {nextShow.StartTime:t}!");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"'{nextShow.Name}' airs tomorrow ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}.");
         }
         else
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"'{nextShow.Name}' airs today ({nextShow.StartTime.DayOfWeek.ToString().ToLower()}) at {nextShow.StartTime:t}!");
+            Console.WriteLine($"'{nextShow.Name}' airs today ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}!");
         }
     }
 }
@@ -204,16 +225,20 @@ static int GetNextDay(DayOfWeek dayOfWeek)
     return now.Day;
 }
 
-static async Task TryGetWinner(MusicShow[] musicShows)
+static async Task TryGetWinner(MusicShow[] musicShows, ProcessStartInfo psi)
 {
     DateTime now = DateTime.Now;
 
     Console.ForegroundColor = ConsoleColor.White;
+    Console.WriteLine("Select the music show to show performances and winner from (within a week)\n");
+
+    Console.ForegroundColor = ConsoleColor.Yellow;
     for (int i = 0; i < musicShows.Length; i++)
     {
-        Console.WriteLine($"({i+1}) {musicShows[i].Name}");
+        Console.WriteLine($"({i+1}) {musicShows[i].Name} ({musicShows[i].EndTime.DayOfWeek})");
     }
 
+    Console.ForegroundColor = ConsoleColor.White;
     ConsoleKey selection = Console.ReadKey().Key;
 
     string? eventToShow = null;
@@ -305,34 +330,41 @@ static async Task TryGetWinner(MusicShow[] musicShows)
         var content = JsonConvert.DeserializeObject<dynamic>(result.Content.ReadAsStringAsync().Result);
         string data = content.data.content_md;
 
+        Console.Clear();
+        Header();
+
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.Write("Selected ");
         Console.ForegroundColor = ConsoleColor.Cyan;
+        Console.Write($"{musicShows[select - 1].Name} ");
+
+        Console.ForegroundColor = ConsoleColor.White;
         if (musicShows[select - 1].StartTime.DayOfWeek != now.DayOfWeek)
         {
             DateTime weekAgo = musicShows[select - 1].EndTime.AddDays(-7);
-            Console.WriteLine($"\n\nSelected '{musicShows[select - 1].Name}' (aired {weekAgo:d})");
+            Console.Write($"(aired {weekAgo:d})\n");
         }
         else
         {
-            Console.WriteLine($"\n\nSelected '{musicShows[select - 1].Name}' (aired {musicShows[select - 1].EndTime:d})");
+            Console.Write("(aired today)\n");
         }
 
         Console.ForegroundColor = ConsoleColor.White;
-        Console.WriteLine("\nChoose the performance to show (opens in YouTube within your browser)");
+        Console.WriteLine("\nChoose the performance to show (opens in YouTube in your browser)");
 
-        GrabAndShowPerformers(data);
-        GrabAndShowWinner(musicShows, now, data, select);
+        GrabAndShowPerformers(musicShows, psi, now, data, select);
     }
     catch (Exception ex)
     {
         if (ex is InvalidOperationException || ex is HttpRequestException || ex is TaskCanceledException) // Other error causes: ?
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\n\nA connection error occurred.\nPossible cause: Your or the server's network issues.");
+            Console.WriteLine($"\n\nNetwork issues.");
         }
         else // Other error causes: outdated url format or outdated data source format
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\n\nAn error occurred during the data reading or parsing.\nPossible cause: The selected music show didn't air last time.");
+            Console.WriteLine($"\n\nThe selected music show didn't air last time.");
         }
 
         //Console.ForegroundColor = ConsoleColor.Gray;
@@ -340,7 +372,7 @@ static async Task TryGetWinner(MusicShow[] musicShows)
     }
 }
 
-static void GrabAndShowPerformers(string data)
+static void GrabAndShowPerformers(MusicShow[] musicShows, ProcessStartInfo psi, DateTime now, string data, int select)
 {
     List<string> _performers = data.Split("|", StringSplitOptions.TrimEntries).ToList<string>();
 
@@ -400,6 +432,127 @@ static void GrabAndShowPerformers(string data)
             Console.WriteLine($"(NOT SET) {performers[i]} - {songs[i]}");
         }
     }
+
+    GrabAndShowWinner(musicShows, now, data, select);
+
+    Console.ForegroundColor = ConsoleColor.White;
+    ConsoleKey selection = Console.ReadKey().Key;
+
+    try
+    {
+        switch (selection)
+        {
+            case ConsoleKey.Q:
+                psi.Arguments = links[0];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.W:
+                psi.Arguments = links[1];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.E:
+                psi.Arguments = links[2];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.R:
+                psi.Arguments = links[3];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.T:
+                psi.Arguments = links[4];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.Y:
+                psi.Arguments = links[5];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.U:
+                psi.Arguments = links[6];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.I:
+                psi.Arguments = links[7];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.O:
+                psi.Arguments = links[8];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.P:
+                psi.Arguments = links[9];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.A:
+                psi.Arguments = links[10];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.S:
+                psi.Arguments = links[11];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.D:
+                psi.Arguments = links[12];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.F:
+                psi.Arguments = links[13];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.G:
+                psi.Arguments = links[14];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.H:
+                psi.Arguments = links[15];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.J:
+                psi.Arguments = links[16];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.K:
+                psi.Arguments = links[17];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.L:
+                psi.Arguments = links[18];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.Z:
+                psi.Arguments = links[19];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.X:
+                psi.Arguments = links[20];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.C:
+                psi.Arguments = links[21];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.V:
+                psi.Arguments = links[22];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.B:
+                psi.Arguments = links[23];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.N:
+                psi.Arguments = links[24];
+                Process.Start(psi);
+                break;
+            case ConsoleKey.M:
+                psi.Arguments = links[25];
+                Process.Start(psi);
+                break;
+        }
+    }
+    catch // Probably selected out of the 'links' array or the selected show didn't have a link
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("\n\nNo link available for the selected performance.");
+    }
 }
 
 static void GrabAndShowWinner(MusicShow[] musicShows, DateTime now, string data, int select)
@@ -412,5 +565,21 @@ static void GrabAndShowWinner(MusicShow[] musicShows, DateTime now, string data,
 
     Console.ForegroundColor = ConsoleColor.Green;
     Console.WriteLine($"\nWinner: {winner}");
+}
+
+static void AboutTheProgram(ProgramData programData)
+{
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Write("Data source used for getting the music show data: ");
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.Write(@"https://www.reddit.com/r/kpop/wiki/music-shows" + "\n");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Write("\nVersion: ");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.Write($"{String.Format("{0:0.0}", programData.Version).Replace(',', '.')}" + "\n");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Write("Creator: ");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.Write($"{programData.Creator}" + "\n");
 }
 #endregion
