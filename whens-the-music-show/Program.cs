@@ -418,7 +418,7 @@ static void GrabAndShowPerformers(MusicShow[] musicShows, ProcessStartInfo psi, 
 
     Console.WriteLine("");
 
-    char[] keys = { 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm' };
+    char[] keys = { 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M' };
 
     Console.ForegroundColor = ConsoleColor.Yellow;
     for (int i = 0; i < performers.Count; i++)
