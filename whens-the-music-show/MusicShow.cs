@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 
 namespace whens_the_music_show
 {
+    internal class DllImport
+    {
+        [DllImport("User32")]
+        public static extern int SetForegroundWindow(IntPtr hwnd);
+        [DllImportAttribute("User32.DLL")]
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+    }
+
     internal class ProgramData
     {
         public string Creator { get; }

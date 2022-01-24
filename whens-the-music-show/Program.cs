@@ -45,6 +45,8 @@ MusicShow[] musicShows = { TheShow, ShowChampion, MCountdown, MusicBank, ShowMus
 
 ProgramData programData = new("Kim19003", 1.0);
 
+Console.OutputEncoding = System.Text.Encoding.Default;
+
 while (true)
 {
     Header();
@@ -350,7 +352,7 @@ static async Task TryGetWinner(MusicShow[] musicShows, ProcessStartInfo psi)
         }
 
         Console.ForegroundColor = ConsoleColor.White;
-        Console.WriteLine("\nChoose the performance to show (opens in YouTube in your browser)");
+        Console.WriteLine("\nChoose the performance to show (opens YouTube in your browser) ('Escape' or 'Enter' to end)");
 
         GrabAndShowPerformers(musicShows, psi, now, data, select);
     }
@@ -435,123 +437,135 @@ static void GrabAndShowPerformers(MusicShow[] musicShows, ProcessStartInfo psi, 
 
     GrabAndShowWinner(musicShows, now, data, select);
 
-    Console.ForegroundColor = ConsoleColor.White;
-    ConsoleKey selection = Console.ReadKey().Key;
+    while (true)
+    {
+        Console.ForegroundColor = ConsoleColor.White;
+        ConsoleKey selection = Console.ReadKey().Key;
 
-    try
-    {
-        switch (selection)
+        try
         {
-            case ConsoleKey.Q:
-                psi.Arguments = links[0];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.W:
-                psi.Arguments = links[1];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.E:
-                psi.Arguments = links[2];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.R:
-                psi.Arguments = links[3];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.T:
-                psi.Arguments = links[4];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.Y:
-                psi.Arguments = links[5];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.U:
-                psi.Arguments = links[6];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.I:
-                psi.Arguments = links[7];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.O:
-                psi.Arguments = links[8];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.P:
-                psi.Arguments = links[9];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.A:
-                psi.Arguments = links[10];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.S:
-                psi.Arguments = links[11];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.D:
-                psi.Arguments = links[12];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.F:
-                psi.Arguments = links[13];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.G:
-                psi.Arguments = links[14];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.H:
-                psi.Arguments = links[15];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.J:
-                psi.Arguments = links[16];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.K:
-                psi.Arguments = links[17];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.L:
-                psi.Arguments = links[18];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.Z:
-                psi.Arguments = links[19];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.X:
-                psi.Arguments = links[20];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.C:
-                psi.Arguments = links[21];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.V:
-                psi.Arguments = links[22];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.B:
-                psi.Arguments = links[23];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.N:
-                psi.Arguments = links[24];
-                Process.Start(psi);
-                break;
-            case ConsoleKey.M:
-                psi.Arguments = links[25];
-                Process.Start(psi);
-                break;
+            switch (selection)
+            {
+                case ConsoleKey.Q:
+                    psi.Arguments = links[0];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.W:
+                    psi.Arguments = links[1];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.E:
+                    psi.Arguments = links[2];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.R:
+                    psi.Arguments = links[3];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.T:
+                    psi.Arguments = links[4];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.Y:
+                    psi.Arguments = links[5];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.U:
+                    psi.Arguments = links[6];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.I:
+                    psi.Arguments = links[7];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.O:
+                    psi.Arguments = links[8];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.P:
+                    psi.Arguments = links[9];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.A:
+                    psi.Arguments = links[10];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.S:
+                    psi.Arguments = links[11];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.D:
+                    psi.Arguments = links[12];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.F:
+                    psi.Arguments = links[13];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.G:
+                    psi.Arguments = links[14];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.H:
+                    psi.Arguments = links[15];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.J:
+                    psi.Arguments = links[16];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.K:
+                    psi.Arguments = links[17];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.L:
+                    psi.Arguments = links[18];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.Z:
+                    psi.Arguments = links[19];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.X:
+                    psi.Arguments = links[20];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.C:
+                    psi.Arguments = links[21];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.V:
+                    psi.Arguments = links[22];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.B:
+                    psi.Arguments = links[23];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.N:
+                    psi.Arguments = links[24];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.M:
+                    psi.Arguments = links[25];
+                    Process.Start(psi);
+                    break;
+                case ConsoleKey.Escape:
+                    return;
+                case ConsoleKey.Enter:
+                    return;
+            }
+
+            Thread.Sleep(100);
+            var myWindowHandler = Process.GetCurrentProcess().MainWindowHandle;
+            DllImport.ShowWindow(myWindowHandler, 5);
+            DllImport.SetForegroundWindow(myWindowHandler);
         }
-    }
-    catch // Probably selected out of the 'links' array or the selected show didn't have a link
-    {
-        Console.ForegroundColor = ConsoleColor.Red;
-        Console.WriteLine("\n\nNo link available for the selected performance.");
+        catch // Probably selected out of the 'links' array or the selected show didn't have a link
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("\n\nNo link available for the selected performance.");
+        }
     }
 }
 
