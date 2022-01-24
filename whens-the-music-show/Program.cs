@@ -137,7 +137,7 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
     {
         if (nextShow.StartTime.Day > now.Day + 1) // More than two days difference
         {
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"'{nextShow.Name}' airs next {nextShow.StartTime.DayOfWeek} at {nextShow.StartTime:t}.");
         }
         else if (nextShow.StartTime.Day > now.Day) // One day difference
@@ -208,6 +208,7 @@ static async Task TryGetWinner(MusicShow[] musicShows)
 {
     DateTime now = DateTime.Now;
 
+    Console.ForegroundColor = ConsoleColor.White;
     for (int i = 0; i < musicShows.Length; i++)
     {
         Console.WriteLine($"({i+1}) {musicShows[i].Name}");
@@ -304,22 +305,22 @@ static async Task TryGetWinner(MusicShow[] musicShows)
         var content = JsonConvert.DeserializeObject<dynamic>(result.Content.ReadAsStringAsync().Result);
         string data = content.data.content_md;
 
-        string _winner = data[data.IndexOf("WINNER")..];
-        _winner = _winner[(_winner.IndexOf('[') + 1)..];
-        _winner = _winner[.._winner.IndexOf(']')];
-
-        string winner = _winner;
-
-        Console.ForegroundColor = ConsoleColor.Green;
-        if (musicShows[select-1].StartTime.DayOfWeek != now.DayOfWeek)
+        Console.ForegroundColor = ConsoleColor.Cyan;
+        if (musicShows[select - 1].StartTime.DayOfWeek != now.DayOfWeek)
         {
-            DateTime weekAgo = musicShows[select-1].EndTime.AddDays(-7);
-            Console.WriteLine($"\n\n{musicShows[select-1].Name} ({weekAgo:d}) winner: {winner}");
+            DateTime weekAgo = musicShows[select - 1].EndTime.AddDays(-7);
+            Console.WriteLine($"\n\nSelected '{musicShows[select - 1].Name}' (aired {weekAgo:d})");
         }
         else
         {
-            Console.WriteLine($"\n\n{musicShows[select-1].Name} ({musicShows[select-1].EndTime:d}) winner: {winner}");
+            Console.WriteLine($"\n\nSelected '{musicShows[select - 1].Name}' (aired {musicShows[select - 1].EndTime:d})");
         }
+
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine("\nChoose the performance to show (opens in YouTube within your browser)");
+
+        GrabAndShowPerformers(data);
+        GrabAndShowWinner(musicShows, now, data, select);
     }
     catch (Exception ex)
     {
@@ -337,5 +338,79 @@ static async Task TryGetWinner(MusicShow[] musicShows)
         //Console.ForegroundColor = ConsoleColor.Gray;
         //Console.WriteLine($"\n({ex}");
     }
+}
+
+static void GrabAndShowPerformers(string data)
+{
+    List<string> _performers = data.Split("|", StringSplitOptions.TrimEntries).ToList<string>();
+
+    for (int i = 0; i < _performers.Count; i++)
+    {
+        if (_performers[i].StartsWith("[Fancam]") || _performers[i].StartsWith("[**"))
+        {
+            _performers.RemoveAt(i);
+        }
+    }
+
+    List<string> performers = new(), songs = new(), links = new();
+    for (int i = 0; i < _performers.Count; i++)
+    {
+        try
+        {
+            if (_performers[i + 1].StartsWith("[")
+                && !_performers[i + 1].StartsWith("[Link]")
+                && !_performers[i + 1].StartsWith("[link]")
+                && !_performers[i + 1].StartsWith("[YouTube]")
+                && !_performers[i + 1].StartsWith("[Youtube]")
+                && !_performers[i + 1].StartsWith("[youtube]")
+                && !_performers[i + 1].StartsWith("[Naver]")
+                && !_performers[i + 1].StartsWith("[naver]")
+                ) // Causes rare error if song name one as excluded names
+            {
+                performers.Add(_performers[i]);
+                songs.Add(_performers[i + 1]);
+            }
+        }
+        catch
+        {
+            continue;
+        }
+    }
+
+    for (int i = 0; i < songs.Count; i++)
+    {
+        songs[i] = songs[i].Replace("[", "").Replace("]", "");
+        links.Add(songs[i][(songs[i].IndexOf("(http") + 1)..].Replace(")", ""));
+        songs[i] = songs[i][..songs[i].IndexOf("(http")];
+    }
+
+    Console.WriteLine("");
+
+    char[] keys = { 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'z', 'x', 'c', 'v', 'b', 'n', 'm' };
+
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    for (int i = 0; i < performers.Count; i++)
+    {
+        if (i < keys.Length)
+        {
+            Console.WriteLine($"({keys[i]}) {performers[i]} - {songs[i]}");
+        }
+        else
+        {
+            Console.WriteLine($"(NOT SET) {performers[i]} - {songs[i]}");
+        }
+    }
+}
+
+static void GrabAndShowWinner(MusicShow[] musicShows, DateTime now, string data, int select)
+{
+    string _winner = data[data.IndexOf("WINNER")..];
+    _winner = _winner[(_winner.IndexOf('[') + 1)..];
+    _winner = _winner[.._winner.IndexOf(']')];
+
+    string winner = _winner;
+
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine($"\nWinner: {winner}");
 }
 #endregion
