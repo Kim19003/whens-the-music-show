@@ -15,3 +15,20 @@ C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\ne
 C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.genruntimeconfig.cache
 C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\Newtonsoft.Json.dll
 C:\Users\Kim\source\repos\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.csproj.CopyComplete
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\whens-the-music-show.exe
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\whens-the-music-show.deps.json
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\whens-the-music-show.runtimeconfig.json
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\whens-the-music-show.dll
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\ref\whens-the-music-show.dll
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\whens-the-music-show.pdb
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.csproj.AssemblyReference.cache
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.GeneratedMSBuildEditorConfig.editorconfig
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.AssemblyInfoInputs.cache
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.AssemblyInfo.cs
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.csproj.CoreCompileInputs.cache
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.csproj.CopyComplete
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.dll
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\ref\whens-the-music-show.dll
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.pdb
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.genruntimeconfig.cache

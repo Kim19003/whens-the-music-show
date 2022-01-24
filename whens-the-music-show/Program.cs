@@ -140,10 +140,15 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"'{nextShow.Name}' airs next {nextShow.StartTime.DayOfWeek} at {nextShow.StartTime:t}.");
         }
-        else
+        else if (nextShow.StartTime.Day > now.Day) // One day difference
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine($"'{nextShow.Name}' airs tomorrow ({nextShow.StartTime.DayOfWeek.ToString().ToLower()}) at {nextShow.StartTime:t}!");
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"'{nextShow.Name}' airs today ({nextShow.StartTime.DayOfWeek.ToString().ToLower()}) at {nextShow.StartTime:t}!");
         }
     }
 }
@@ -306,7 +311,15 @@ static async Task TryGetWinner(MusicShow[] musicShows)
         string winner = _winner;
 
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"\n\n{musicShows[select-1].Name} ({musicShows[select-1].EndTime:d}) winner: {winner}");
+        if (musicShows[select-1].StartTime.DayOfWeek != now.DayOfWeek)
+        {
+            DateTime weekAgo = musicShows[select-1].EndTime.AddDays(-7);
+            Console.WriteLine($"\n\n{musicShows[select-1].Name} ({weekAgo:d}) winner: {winner}");
+        }
+        else
+        {
+            Console.WriteLine($"\n\n{musicShows[select-1].Name} ({musicShows[select-1].EndTime:d}) winner: {winner}");
+        }
     }
     catch (Exception ex)
     {
@@ -321,8 +334,8 @@ static async Task TryGetWinner(MusicShow[] musicShows)
             Console.WriteLine($"\n\nAn error occurred during the data reading or parsing.\nPossible cause: The selected music show didn't air last time.");
         }
 
-        Console.ForegroundColor = ConsoleColor.Gray;
-        Console.WriteLine($"\n({ex}");
+        //Console.ForegroundColor = ConsoleColor.Gray;
+        //Console.WriteLine($"\n({ex}");
     }
 }
 #endregion
