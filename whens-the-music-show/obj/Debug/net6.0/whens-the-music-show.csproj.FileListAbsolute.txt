@@ -32,3 +32,5 @@ D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\w
 D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\ref\whens-the-music-show.dll
 D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.pdb
 D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.genruntimeconfig.cache
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens_the_music_show.Properties.Resources.resources
+D:\stuff\- GITHUB -\whens-the-music-show\whens-the-music-show\obj\Debug\net6.0\whens-the-music-show.csproj.GenerateResource.cache

@@ -154,7 +154,7 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
     if (airingNow != null)
     {
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"'{airingNow.Name}' is airing now! ({now - airingNow.StartTime} minutes in)");
+        Console.WriteLine($"'{airingNow.Name}' is airing right now! (started {(now - airingNow.StartTime).Minutes} minutes ago)");
     }
     else if (nextShow != null)
     {
