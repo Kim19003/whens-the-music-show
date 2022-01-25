@@ -52,12 +52,25 @@ while (true)
     Header();
 
     Console.ForegroundColor = ConsoleColor.White;
-    Console.WriteLine(
-            "(1) Show all music show airing times\n" +
-            "(2) Show the next music show airing time\n" +
-            "(3) Show music show performances and winner\n" +
-            "(A) About the program"
-        );
+    Console.Write("(1) ");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("Show all music show airing times");
+
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Write("(2) ");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("Show the next music show airing time");
+
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Write("(3) ");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("Show music show performances and winner");
+
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Write("(A) ");
+    Console.ForegroundColor = ConsoleColor.Yellow;
+    Console.WriteLine("About the program");
+
     ConsoleKey selection = Console.ReadKey().Key;
 
     switch (selection)
@@ -115,18 +128,79 @@ static void ShowAllMusicShows(MusicShow[] musicShows)
 {
     DateTime now = DateTime.Now;
 
-    for (int i = 0; i < musicShows.Length; i++)
+    int hoursFromNow = 0, daysFromNow = 0;
+
+    for (int i = 0; i < musicShows.Length - 1; i++)
     {
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine($"{musicShows[i].StartTime.DayOfWeek}: ");
+
         if (musicShows[i].StartTime.DayOfWeek == now.DayOfWeek)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.Cyan;
+
         }
         else
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
         }
 
-        Console.WriteLine($"{musicShows[i].StartTime.DayOfWeek}: {musicShows[i].Name} ({musicShows[i].StartTime:g})");
+        hoursFromNow = (musicShows[i].StartTime - now).Hours;
+        daysFromNow = (musicShows[i].StartTime - now).Days;
+
+        Console.Write($"{musicShows[i].Name} ({musicShows[i].StartTime:g}) ");
+        Console.ForegroundColor = ConsoleColor.White;
+
+        if (hoursFromNow < 0)
+        {
+            Console.WriteLine($"— {Math.Abs(hoursFromNow)} hours ago\n"); 
+        }
+        else
+        {
+            if (daysFromNow < 1)
+            {
+                Console.WriteLine($"— {hoursFromNow} hours from now\n");
+            }
+            else
+            {
+                Console.WriteLine($"— {daysFromNow} days and {hoursFromNow} hours from now\n");
+            }
+        }
+    }
+
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.WriteLine($"{musicShows[^1].StartTime.DayOfWeek}: ");
+
+    if (musicShows[^1].StartTime.DayOfWeek == now.DayOfWeek)
+    {
+        Console.ForegroundColor = ConsoleColor.Cyan;
+
+    }
+    else
+    {
+        Console.ForegroundColor = ConsoleColor.Yellow;
+    }
+
+    hoursFromNow = (musicShows[^1].StartTime - now).Hours;
+    daysFromNow = (musicShows[^1].StartTime - now).Days;
+
+    Console.Write($"{musicShows[^1].Name} ({musicShows[^1].StartTime:g}) ");
+    Console.ForegroundColor = ConsoleColor.White;
+
+    if (hoursFromNow < 0)
+    {
+        Console.WriteLine($"— {Math.Abs(hoursFromNow)} hours ago\n");
+    }
+    else
+    {
+        if (daysFromNow < 1)
+        {
+            Console.WriteLine($"— {hoursFromNow} hours from now");
+        }
+        else
+        {
+            Console.WriteLine($"— {daysFromNow} days and {hoursFromNow} hours from now");
+        }
     }
 }
 
@@ -234,10 +308,36 @@ static async Task TryGetWinner(MusicShow[] musicShows, ProcessStartInfo psi)
     Console.ForegroundColor = ConsoleColor.White;
     Console.WriteLine("Select the music show to show performances and winner from (within a week)\n");
 
-    Console.ForegroundColor = ConsoleColor.Yellow;
+    bool today = false;
+
     for (int i = 0; i < musicShows.Length; i++)
     {
-        Console.WriteLine($"({i+1}) {musicShows[i].Name} ({musicShows[i].EndTime.DayOfWeek})");
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.Write($"({i+1}) ");
+
+        if (now.DayOfWeek == musicShows[i].EndTime.DayOfWeek)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            today = true;
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+        }
+
+        Console.Write($"{musicShows[i].Name} ({musicShows[i].EndTime.DayOfWeek}) ");
+        Console.ForegroundColor = ConsoleColor.White;
+
+        if (today)
+        {
+            Console.WriteLine($"— today");
+            today = false;
+        }
+        else
+        {
+            DateTime weekAgo = musicShows[i].EndTime.AddDays(-7);
+            Console.WriteLine($"— {Math.Abs((weekAgo - now).Days)} days ago");
+        }
     }
 
     Console.ForegroundColor = ConsoleColor.White;
@@ -422,16 +522,21 @@ static void GrabAndShowPerformers(MusicShow[] musicShows, ProcessStartInfo psi, 
 
     char[] keys = { 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M' };
 
-    Console.ForegroundColor = ConsoleColor.Yellow;
     for (int i = 0; i < performers.Count; i++)
     {
         if (i < keys.Length)
         {
-            Console.WriteLine($"({keys[i]}) {performers[i]} - {songs[i]}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write($"({keys[i]}) ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{performers[i]} - {songs[i]}");
         }
         else
         {
-            Console.WriteLine($"(NOT SET) {performers[i]} - {songs[i]}");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"(NOT SET) ");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{performers[i]} - {songs[i]}");
         }
     }
 
