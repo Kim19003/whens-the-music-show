@@ -153,7 +153,14 @@ static void ShowAllMusicShows(MusicShow[] musicShows)
 
         if (hoursFromNow < 0)
         {
-            Console.WriteLine($"— {Math.Abs(hoursFromNow)} hours ago\n"); 
+            if (daysFromNow < 0)
+            {
+                Console.WriteLine($"— {Math.Abs(daysFromNow)} days and {Math.Abs(hoursFromNow)} hours ago\n");
+            }
+            else
+            {
+                Console.WriteLine($"— {Math.Abs(hoursFromNow)} hours ago\n");
+            }
         }
         else
         {
@@ -189,7 +196,14 @@ static void ShowAllMusicShows(MusicShow[] musicShows)
 
     if (hoursFromNow < 0)
     {
-        Console.WriteLine($"— {Math.Abs(hoursFromNow)} hours ago\n");
+        if (daysFromNow < 0)
+        {
+            Console.WriteLine($"— {Math.Abs(daysFromNow)} days and {Math.Abs(hoursFromNow)} hours ago\n");
+        }
+        else
+        {
+            Console.WriteLine($"— {Math.Abs(hoursFromNow)} hours ago\n");
+        }
     }
     else
     {
@@ -232,20 +246,37 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
     }
     else if (nextShow != null)
     {
+        int hoursFromNow = (musicShows[^1].StartTime - now).Hours;
+        int minutesFromNow = (musicShows[^1].StartTime - now).Minutes;
+        int daysFromNow = (musicShows[^1].StartTime - now).Days;
+
         if (nextShow.StartTime.Day > now.Day + 1) // More than two days difference
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"'{nextShow.Name}' airs next {nextShow.StartTime.DayOfWeek} at {nextShow.StartTime:t}.");
+            Console.Write($"'{nextShow.Name}' airs next {nextShow.StartTime.DayOfWeek} at {nextShow.StartTime:t}! ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"— {daysFromNow} days and {hoursFromNow} hours and {minutesFromNow} minutes from now");
         }
         else if (nextShow.StartTime.Day > now.Day) // One day difference
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"'{nextShow.Name}' airs tomorrow ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}.");
+            Console.Write($"'{nextShow.Name}' airs tomorrow ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}! ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine($"— {hoursFromNow} hours and {minutesFromNow} minutes from now");
         }
-        else
+        else // Today
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"'{nextShow.Name}' airs today ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}!");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write($"'{nextShow.Name}' airs today ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}! ");
+            Console.ForegroundColor = ConsoleColor.White;
+            if (hoursFromNow < 1)
+            {
+                Console.WriteLine($"— {minutesFromNow} minutes from now");
+            }
+            else
+            {
+                Console.WriteLine($"— {hoursFromNow} hours and {minutesFromNow} minutes from now");
+            }
         }
     }
 }
