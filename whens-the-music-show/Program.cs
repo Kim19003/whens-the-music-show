@@ -227,7 +227,7 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
 
     foreach (MusicShow musicShow in musicShows)
     {
-        if (musicShow.StartTime.DayOfWeek < now.DayOfWeek) // FIX THIS!!!
+        if (musicShow.StartTime.DayOfWeek < now.DayOfWeek)
         {
             continue;
         }
@@ -240,6 +240,11 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
         else if (musicShow.StartTime > now) // Next show
         {
             nextShow = musicShow;
+            break;
+        }
+        else if (now.DayOfWeek == DayOfWeek.Sunday) // If it's Sunday and the music show already aired...
+        {
+            nextShow = musicShows[0]; // ...the next music show is ALWAYS the first music show of the next week (first element of the array)
             break;
         }
     }
@@ -261,18 +266,18 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
     }
     else if (nextShow != null)
     {
-        int hoursFromNow = (musicShows[^1].StartTime - now).Hours;
-        int minutesFromNow = (musicShows[^1].StartTime - now).Minutes;
-        int daysFromNow = (musicShows[^1].StartTime - now).Days;
+        int hoursFromNow = (nextShow.StartTime - now).Hours;
+        int minutesFromNow = (nextShow.StartTime - now).Minutes;
+        int daysFromNow = (nextShow.StartTime - now).Days;
 
-        if ((nextShow.StartTime - now).Days > 1) // More than two days difference
+        if (daysFromNow > 1) // In two days
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"'{nextShow.Name}' airs next {nextShow.StartTime.DayOfWeek} at {nextShow.StartTime:t}! ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"— {daysFromNow} day(s) and {hoursFromNow} hour(s) and {minutesFromNow} minute(s) from now");
         }
-        else if ((nextShow.StartTime - now).Days > 0) // One day difference
+        else if (now.DayOfWeek != nextShow.StartTime.DayOfWeek) // Tomorrow
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"'{nextShow.Name}' airs tomorrow ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}! ");
@@ -281,6 +286,7 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
         }
         else // Today
         {
+            Console.WriteLine((nextShow.StartTime - now).Days);
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write($"'{nextShow.Name}' airs today ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}! ");
             Console.ForegroundColor = ConsoleColor.White;
@@ -544,7 +550,14 @@ static void GrabAndShowPerformers(MusicShow[] musicShows, ProcessStartInfo psi, 
     {
         try
         {
-            if (_performers[i + 1].StartsWith("[")
+            if (
+                // Blacklist artist names
+                !_performers[i].StartsWith("[")
+
+                // Whitelist artist names
+
+
+                // Blacklist song names
                 && !_performers[i + 1].StartsWith("[Link]")
                 && !_performers[i + 1].StartsWith("[link]")
                 && !_performers[i + 1].StartsWith("[YouTube]")
@@ -552,7 +565,12 @@ static void GrabAndShowPerformers(MusicShow[] musicShows, ProcessStartInfo psi, 
                 && !_performers[i + 1].StartsWith("[youtube]")
                 && !_performers[i + 1].StartsWith("[Naver]")
                 && !_performers[i + 1].StartsWith("[naver]")
-                ) // Causes rare error if song name one as excluded names
+
+                // Whitelist song names
+                && _performers[i + 1].StartsWith("[")
+
+                // Parsing bugs occur if artist/song name starts with the excluded ones
+                )
             {
                 performers.Add(_performers[i]);
                 songs.Add(_performers[i + 1]);
