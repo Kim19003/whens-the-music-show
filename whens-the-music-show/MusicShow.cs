@@ -38,6 +38,20 @@ namespace whens_the_music_show
         }
     }
 
+    internal class Performance
+    {
+        public string? Artist { get; set; }
+        public string? Song { get; set; }
+        public string? Link { get; set; }
+
+        public Performance(string? artist, string? song, string? link)
+        {
+            Artist = artist;
+            Song = song;
+            Link = link;
+        }
+    }
+
     internal class Time
     {
         public int Hour { get; set; }

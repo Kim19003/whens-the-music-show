@@ -43,6 +43,8 @@ MusicShow Inkigayo = new MusicShow(
 
 MusicShow[] musicShows = { TheShow, ShowChampion, MCountdown, MusicBank, ShowMusicCore, Inkigayo };
 
+List<Performance> performances = new();
+
 ProgramData programData = new("Kim19003", 1.0);
 
 Console.OutputEncoding = System.Text.Encoding.Default;
@@ -90,7 +92,7 @@ while (true)
         case ConsoleKey.D3:
             Console.Clear();
             Header();
-            await TryGetWinner(musicShows, psi);
+            await TryGetWinner(musicShows, performances, psi);
             Console.ReadKey();
             break;
         case ConsoleKey.A:
@@ -99,7 +101,6 @@ while (true)
             AboutTheProgram(programData);
             Console.ReadKey();
             break;
-
     }
 
     Console.Clear();
@@ -360,7 +361,7 @@ static int GetDaysToNextDay(DayOfWeek dayOfWeek)
     return dayDifference;
 }
 
-static async Task TryGetWinner(MusicShow[] musicShows, ProcessStartInfo psi)
+static async Task TryGetWinner(MusicShow[] musicShows, List<Performance> performances, ProcessStartInfo psi)
 {
     DateTime now = DateTime.Now;
 
@@ -487,9 +488,9 @@ static async Task TryGetWinner(MusicShow[] musicShows, ProcessStartInfo psi)
 
     try
     {
-        var result = await client.GetAsync($"https://www.reddit.com/r/kpop/wiki/music-shows/{eventToShow}.json");
-        var content = JsonConvert.DeserializeObject<dynamic>(result.Content.ReadAsStringAsync().Result);
-        string data = content.data.content_md;
+        HttpResponseMessage result = await client.GetAsync($"https://www.reddit.com/r/kpop/wiki/music-shows/{eventToShow}.json");
+        dynamic? content = JsonConvert.DeserializeObject<dynamic>(result.Content.ReadAsStringAsync().Result);
+        string? data = content?.data.content_md;
 
         Console.Clear();
         Header();
@@ -513,7 +514,7 @@ static async Task TryGetWinner(MusicShow[] musicShows, ProcessStartInfo psi)
         Console.ForegroundColor = ConsoleColor.White;
         Console.WriteLine("\nChoose the performance to show (opens YouTube in your browser) ('Escape' or 'Enter' to end)");
 
-        GrabAndShowPerformers(musicShows, psi, now, data, select);
+        GrabAndShowPerformers(musicShows, performances, psi, now, data, select);
     }
     catch (Exception ex)
     {
@@ -533,7 +534,7 @@ static async Task TryGetWinner(MusicShow[] musicShows, ProcessStartInfo psi)
     }
 }
 
-static void GrabAndShowPerformers(MusicShow[] musicShows, ProcessStartInfo psi, DateTime now, string data, int select)
+static void GrabAndShowPerformers(MusicShow[] musicShows, List<Performance> performances, ProcessStartInfo psi, DateTime now, string data, int select)
 {
     List<string> _performers = data.Split("|", StringSplitOptions.TrimEntries).ToList<string>();
 
@@ -589,6 +590,16 @@ static void GrabAndShowPerformers(MusicShow[] musicShows, ProcessStartInfo psi, 
         songs[i] = songs[i][..songs[i].IndexOf("(http")];
     }
 
+    if (performances.Count > 0)
+    {
+        performances.Clear();
+    }
+
+    for (int i = 0; i < songs.Count; i++) // Init 'performances' list
+    {
+        performances.Add(new Performance(performers[i], songs[i], links[i]));
+    }
+
     Console.WriteLine("");
 
     char[] keys = { 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M' };
@@ -599,16 +610,15 @@ static void GrabAndShowPerformers(MusicShow[] musicShows, ProcessStartInfo psi, 
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write($"({keys[i]}) ");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"{performers[i]} - {songs[i]}");
         }
         else
         {
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine($"(NOT SET) ");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"{performers[i]} - {songs[i]}");
         }
+
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"{performances[i].Artist} - {performances[i].Song}");
     }
 
     GrabAndShowWinner(musicShows, now, data, select);
@@ -618,124 +628,111 @@ static void GrabAndShowPerformers(MusicShow[] musicShows, ProcessStartInfo psi, 
         Console.ForegroundColor = ConsoleColor.White;
         ConsoleKey selection = Console.ReadKey().Key;
 
+        bool dontStartProcess = false;
         try
         {
             switch (selection)
             {
                 case ConsoleKey.Q:
-                    psi.Arguments = links[0];
-                    Process.Start(psi);
+                    psi.Arguments = performances[0].Link;
                     break;
                 case ConsoleKey.W:
-                    psi.Arguments = links[1];
-                    Process.Start(psi);
+                    psi.Arguments = performances[1].Link;
                     break;
                 case ConsoleKey.E:
-                    psi.Arguments = links[2];
-                    Process.Start(psi);
+                    psi.Arguments = performances[2].Link;
                     break;
                 case ConsoleKey.R:
-                    psi.Arguments = links[3];
-                    Process.Start(psi);
+                    psi.Arguments = performances[3].Link;
                     break;
                 case ConsoleKey.T:
-                    psi.Arguments = links[4];
-                    Process.Start(psi);
+                    psi.Arguments = performances[4].Link;
                     break;
                 case ConsoleKey.Y:
-                    psi.Arguments = links[5];
-                    Process.Start(psi);
+                    psi.Arguments = performances[5].Link;
                     break;
                 case ConsoleKey.U:
-                    psi.Arguments = links[6];
-                    Process.Start(psi);
+                    psi.Arguments = performances[6].Link;
                     break;
                 case ConsoleKey.I:
-                    psi.Arguments = links[7];
-                    Process.Start(psi);
+                    psi.Arguments = performances[7].Link;
                     break;
                 case ConsoleKey.O:
-                    psi.Arguments = links[8];
-                    Process.Start(psi);
+                    psi.Arguments = performances[8].Link;
                     break;
                 case ConsoleKey.P:
-                    psi.Arguments = links[9];
-                    Process.Start(psi);
+                    psi.Arguments = performances[9].Link;
                     break;
                 case ConsoleKey.A:
-                    psi.Arguments = links[10];
-                    Process.Start(psi);
+                    psi.Arguments = performances[10].Link;
                     break;
                 case ConsoleKey.S:
-                    psi.Arguments = links[11];
-                    Process.Start(psi);
+                    psi.Arguments = performances[11].Link;
                     break;
                 case ConsoleKey.D:
-                    psi.Arguments = links[12];
-                    Process.Start(psi);
+                    psi.Arguments = performances[12].Link;
                     break;
                 case ConsoleKey.F:
-                    psi.Arguments = links[13];
-                    Process.Start(psi);
+                    psi.Arguments = performances[13].Link;
                     break;
                 case ConsoleKey.G:
-                    psi.Arguments = links[14];
-                    Process.Start(psi);
+                    psi.Arguments = performances[14].Link;
                     break;
                 case ConsoleKey.H:
-                    psi.Arguments = links[15];
-                    Process.Start(psi);
+                    psi.Arguments = performances[15].Link;
                     break;
                 case ConsoleKey.J:
-                    psi.Arguments = links[16];
-                    Process.Start(psi);
+                    psi.Arguments = performances[16].Link;
                     break;
                 case ConsoleKey.K:
-                    psi.Arguments = links[17];
-                    Process.Start(psi);
+                    psi.Arguments = performances[17].Link;
                     break;
                 case ConsoleKey.L:
-                    psi.Arguments = links[18];
-                    Process.Start(psi);
+                    psi.Arguments = performances[18].Link;
                     break;
                 case ConsoleKey.Z:
-                    psi.Arguments = links[19];
-                    Process.Start(psi);
+                    psi.Arguments = performances[19].Link;
                     break;
                 case ConsoleKey.X:
-                    psi.Arguments = links[20];
-                    Process.Start(psi);
+                    psi.Arguments = performances[20].Link;
                     break;
                 case ConsoleKey.C:
-                    psi.Arguments = links[21];
-                    Process.Start(psi);
+                    psi.Arguments = performances[21].Link;
                     break;
                 case ConsoleKey.V:
-                    psi.Arguments = links[22];
-                    Process.Start(psi);
+                    psi.Arguments = performances[22].Link;
                     break;
                 case ConsoleKey.B:
-                    psi.Arguments = links[23];
-                    Process.Start(psi);
+                    psi.Arguments = performances[23].Link;
                     break;
                 case ConsoleKey.N:
-                    psi.Arguments = links[24];
-                    Process.Start(psi);
+                    psi.Arguments = performances[24].Link;
                     break;
                 case ConsoleKey.M:
-                    psi.Arguments = links[25];
-                    Process.Start(psi);
+                    psi.Arguments = performances[25].Link;
                     break;
                 case ConsoleKey.Escape:
                     return;
                 case ConsoleKey.Enter:
                     return;
+                default:
+                    dontStartProcess = true;
+                    break;
             }
 
-            Thread.Sleep(100);
-            var myWindowHandler = Process.GetCurrentProcess().MainWindowHandle;
-            DllImport.ShowWindow(myWindowHandler, 5);
-            DllImport.SetForegroundWindow(myWindowHandler);
+            if (!dontStartProcess)
+            {
+                Process.Start(psi);
+                
+                Thread.Sleep(100);
+                IntPtr myWindowHandler = Process.GetCurrentProcess().MainWindowHandle;
+                DllImport.ShowWindow(myWindowHandler, 5);
+                DllImport.SetForegroundWindow(myWindowHandler);
+            }
+            else
+            {
+                dontStartProcess = false;
+            }
         }
         catch // Probably selected out of the 'links' array or the selected show didn't have a link
         {
