@@ -155,22 +155,22 @@ static void ShowAllMusicShows(MusicShow[] musicShows)
         {
             if (daysFromNow < 0)
             {
-                Console.WriteLine($"— {Math.Abs(daysFromNow)} days and {Math.Abs(hoursFromNow)} hours ago\n");
+                Console.WriteLine($"— {Math.Abs(daysFromNow)} day(s) and {Math.Abs(hoursFromNow)} hour(s) ago\n");
             }
             else
             {
-                Console.WriteLine($"— {Math.Abs(hoursFromNow)} hours ago\n");
+                Console.WriteLine($"— {Math.Abs(hoursFromNow)} hour(s) ago\n");
             }
         }
         else
         {
             if (daysFromNow < 1)
             {
-                Console.WriteLine($"— {hoursFromNow} hours from now\n");
+                Console.WriteLine($"— {hoursFromNow} hour(s) from now\n");
             }
             else
             {
-                Console.WriteLine($"— {daysFromNow} days and {hoursFromNow} hours from now\n");
+                Console.WriteLine($"— {daysFromNow} day(s) and {hoursFromNow} hour(s) from now\n");
             }
         }
     }
@@ -198,22 +198,22 @@ static void ShowAllMusicShows(MusicShow[] musicShows)
     {
         if (daysFromNow < 0)
         {
-            Console.WriteLine($"— {Math.Abs(daysFromNow)} days and {Math.Abs(hoursFromNow)} hours ago\n");
+            Console.WriteLine($"— {Math.Abs(daysFromNow)} day(s) and {Math.Abs(hoursFromNow)} hour(s) ago\n");
         }
         else
         {
-            Console.WriteLine($"— {Math.Abs(hoursFromNow)} hours ago\n");
+            Console.WriteLine($"— {Math.Abs(hoursFromNow)} hour(s) ago\n");
         }
     }
     else
     {
         if (daysFromNow < 1)
         {
-            Console.WriteLine($"— {hoursFromNow} hours from now");
+            Console.WriteLine($"— {hoursFromNow} hour(s) from now");
         }
         else
         {
-            Console.WriteLine($"— {daysFromNow} days and {hoursFromNow} hours from now");
+            Console.WriteLine($"— {daysFromNow} day(s) and {hoursFromNow} hour(s) from now");
         }
     }
 }
@@ -227,6 +227,11 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
 
     foreach (MusicShow musicShow in musicShows)
     {
+        if (musicShow.StartTime.DayOfWeek < now.DayOfWeek) // FIX THIS!!!
+        {
+            continue;
+        }
+
         if (musicShow.StartTime < now && musicShow.EndTime > now) // Airing now
         {
             airingNow = musicShow;
@@ -241,8 +246,18 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
 
     if (airingNow != null)
     {
+        int hoursAgo = (now - airingNow.StartTime).Hours;
+        int minutesAgo = (now - airingNow.StartTime).Minutes;
+
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"'{airingNow.Name}' is airing right now! (started {(now - airingNow.StartTime).Minutes} minutes ago)");
+        if (hoursAgo < 1)
+        {
+            Console.WriteLine($"'{airingNow.Name}' is airing right now! (started {minutesAgo} minute(s) ago)");
+        }
+        else
+        {
+            Console.WriteLine($"'{airingNow.Name}' is airing right now! (started {hoursAgo} hour(s) {minutesAgo} minute(s) ago)");
+        }
     }
     else if (nextShow != null)
     {
@@ -250,19 +265,19 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
         int minutesFromNow = (musicShows[^1].StartTime - now).Minutes;
         int daysFromNow = (musicShows[^1].StartTime - now).Days;
 
-        if (nextShow.StartTime.Day > now.Day + 1) // More than two days difference
+        if ((nextShow.StartTime - now).Days > 1) // More than two days difference
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"'{nextShow.Name}' airs next {nextShow.StartTime.DayOfWeek} at {nextShow.StartTime:t}! ");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"— {daysFromNow} days and {hoursFromNow} hours and {minutesFromNow} minutes from now");
+            Console.WriteLine($"— {daysFromNow} day(s) and {hoursFromNow} hour(s) and {minutesFromNow} minute(s) from now");
         }
-        else if (nextShow.StartTime.Day > now.Day) // One day difference
+        else if ((nextShow.StartTime - now).Days > 0) // One day difference
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.Write($"'{nextShow.Name}' airs tomorrow ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}! ");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"— {hoursFromNow} hours and {minutesFromNow} minutes from now");
+            Console.WriteLine($"— {hoursFromNow} hour(s) and {minutesFromNow} minute(s) from now");
         }
         else // Today
         {
@@ -271,11 +286,11 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
             Console.ForegroundColor = ConsoleColor.White;
             if (hoursFromNow < 1)
             {
-                Console.WriteLine($"— {minutesFromNow} minutes from now");
+                Console.WriteLine($"— {minutesFromNow} minute(s) from now");
             }
             else
             {
-                Console.WriteLine($"— {hoursFromNow} hours and {minutesFromNow} minutes from now");
+                Console.WriteLine($"— {hoursFromNow} hour(s) and {minutesFromNow} minute(s) from now");
             }
         }
     }
@@ -283,18 +298,22 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
 
 static DateTime SimpleTime(DayOfWeek dayOfWeek, Time time)
 {
+    DateTime nextWeek = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, time.Hour, time.Minute, 00);
+
     if (time.GetDayDifference() == 1) // Can't be more than 1 in real life
     {
-        return new DateTime(DateTime.Now.Year, DateTime.Now.Month, GetNextDay(dayOfWeek) + 1, time.Hour, time.Minute, 00);
+        nextWeek = nextWeek.AddDays(GetDaysToNextDay(dayOfWeek) + 1);
     }
     else if (time.GetDayDifference() == -1) // Can't be less than -1 in real life
     {
-        return new DateTime(DateTime.Now.Year, DateTime.Now.Month, GetNextDay(dayOfWeek) - 1, time.Hour, time.Minute, 00);
+        nextWeek = nextWeek.AddDays(GetDaysToNextDay(dayOfWeek) - 1);
     }
     else
     {
-        return new DateTime(DateTime.Now.Year, DateTime.Now.Month, GetNextDay(dayOfWeek), time.Hour, time.Minute, 00);
+        nextWeek = nextWeek.AddDays(GetDaysToNextDay(dayOfWeek));
     }
+
+    return nextWeek;
 }
 
 static Time ConvertToTimeZone(int timeDifference, Time now)
@@ -313,23 +332,26 @@ static Time ConvertToTimeZone(int timeDifference, Time now)
     return convertedTime;
 }
 
-static int GetNextDay(DayOfWeek dayOfWeek)
+static int GetDaysToNextDay(DayOfWeek dayOfWeek)
 {
     DateTime now = DateTime.Now;
+    int dayDifference = 0;
 
     if (now.DayOfWeek != dayOfWeek)
     {
         DateTime result = DateTime.Now.AddDays(1);
+        dayDifference++;
 
         while (result.DayOfWeek != dayOfWeek)
         {
             result = result.AddDays(1);
+            dayDifference++;
         }
 
-        return result.Day;
+        return dayDifference;
     }
 
-    return now.Day;
+    return dayDifference;
 }
 
 static async Task TryGetWinner(MusicShow[] musicShows, ProcessStartInfo psi)
@@ -367,7 +389,7 @@ static async Task TryGetWinner(MusicShow[] musicShows, ProcessStartInfo psi)
         else
         {
             DateTime weekAgo = musicShows[i].EndTime.AddDays(-7);
-            Console.WriteLine($"— {Math.Abs((weekAgo - now).Days)} days ago");
+            Console.WriteLine($"— {Math.Abs((weekAgo - now).Days)} day(s) ago");
         }
     }
 
@@ -492,12 +514,12 @@ static async Task TryGetWinner(MusicShow[] musicShows, ProcessStartInfo psi)
         if (ex is InvalidOperationException || ex is HttpRequestException || ex is TaskCanceledException) // Other error causes: ?
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\n\nNetwork issues.");
+            Console.WriteLine($"\n\nConnection issues.");
         }
         else // Other error causes: outdated url format or outdated data source format
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\n\nThe selected music show didn't air last time.");
+            Console.WriteLine($"\n\nThe selected music show has not been added yet or the selected music show didn't air last time.");
         }
 
         //Console.ForegroundColor = ConsoleColor.Gray;
