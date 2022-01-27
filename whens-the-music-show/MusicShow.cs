@@ -42,6 +42,7 @@ namespace whens_the_music_show
     {
         public string? Artist { get; set; }
         public string? Song { get; set; }
+        public string? Stage { get; set; }
         public string? Link { get; set; }
 
         public Performance(string? artist, string? song, string? link)
@@ -49,6 +50,11 @@ namespace whens_the_music_show
             Artist = artist;
             Song = song;
             Link = link;
+        }
+
+        public void AddToStage(string stageName)
+        {
+            Stage = stageName;
         }
     }
 

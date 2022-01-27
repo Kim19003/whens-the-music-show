@@ -536,7 +536,11 @@ static async Task TryGetWinner(MusicShow[] musicShows, List<Performance> perform
 
 static void GrabAndShowPerformers(MusicShow[] musicShows, List<Performance> performances, ProcessStartInfo psi, DateTime now, string data, int select)
 {
-    List<string> _performers = data.Split("|", StringSplitOptions.TrimEntries).ToList<string>();
+    List<string> _performers = data.Split("|", StringSplitOptions.TrimEntries).ToList<string>(),
+    _stages = data.Split("| Song |", StringSplitOptions.TrimEntries).ToList<string>();
+
+    string[] stageNames = { "Special Stage", "Special Stages", "Debut Stages", "Comeback Stages",
+        "Hot Stages" };
 
     for (int i = 0; i < _performers.Count; i++)
     {
@@ -600,12 +604,53 @@ static void GrabAndShowPerformers(MusicShow[] musicShows, List<Performance> perf
         performances.Add(new Performance(performers[i], songs[i], links[i]));
     }
 
+    for (int i = 0; i < _stages.Count; i++)
+    {
+        foreach (Performance performance in performances)
+        {
+            try
+            {
+                if (_stages[i + 1].Contains(performance.Artist) && _stages[i + 1].Contains(performance.Song))
+                {
+                    foreach (string stageName in stageNames)
+                    {
+                        if (_stages[i].Contains(stageName))
+                        {
+                            performance.AddToStage(stageName);
+                            break;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                break;
+            }
+        }
+    }
+
     Console.WriteLine("");
+
+    GrabAndShowWinner(musicShows, now, data, select);
 
     char[] keys = { 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M' };
 
-    for (int i = 0; i < performers.Count; i++)
+    string currentStageName = "";
+
+    for (int i = 0; i < performances.Count; i++)
     {
+        if (performances[i].Stage != currentStageName)
+        {
+            currentStageName = performances[i].Stage;
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            if (i > 0)
+            {
+                Console.WriteLine("");
+            }
+            Console.WriteLine($"-- {currentStageName} --");
+        }
+
         if (i < keys.Length)
         {
             Console.ForegroundColor = ConsoleColor.White;
@@ -618,10 +663,15 @@ static void GrabAndShowPerformers(MusicShow[] musicShows, List<Performance> perf
         }
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine($"{performances[i].Artist} - {performances[i].Song}");
+        if (performances[i].Artist != "")
+        {
+            Console.WriteLine($"{performances[i].Artist} - {performances[i].Song}");
+        }
+        else
+        {
+            Console.WriteLine($"{performances[i - 1].Artist} - {performances[i].Song}");
+        }
     }
-
-    GrabAndShowWinner(musicShows, now, data, select);
 
     while (true)
     {
@@ -751,7 +801,7 @@ static void GrabAndShowWinner(MusicShow[] musicShows, DateTime now, string data,
     string winner = _winner;
 
     Console.ForegroundColor = ConsoleColor.Green;
-    Console.WriteLine($"\nWinner: {winner}");
+    Console.WriteLine($"Winner: {winner}\n");
 }
 
 static void AboutTheProgram(ProgramData programData)
