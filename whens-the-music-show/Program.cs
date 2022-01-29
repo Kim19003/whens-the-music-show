@@ -45,7 +45,7 @@ MusicShow[] musicShows = { TheShow, ShowChampion, MCountdown, MusicBank, ShowMus
 
 List<Performance> performances = new();
 
-ProgramData programData = new("Kim19003", 1.0);
+ProgramData programData = new("github.com/Kim19003", 1.0);
 
 Console.OutputEncoding = System.Text.Encoding.Default;
 
@@ -243,9 +243,16 @@ static void ShowNextMusicShow(MusicShow[] musicShows)
             nextShow = musicShow;
             break;
         }
+
+        // Since Sunday is 0 in DayOfWeek...
+        else if (now.DayOfWeek == DayOfWeek.Saturday) // If it's Saturday and the music show already aired...
+        {
+            nextShow = musicShows[^1]; // ...the next music show is ALWAYS the Sunday's music show (last element of the array)
+            break;
+        }
         else if (now.DayOfWeek == DayOfWeek.Sunday) // If it's Sunday and the music show already aired...
         {
-            nextShow = musicShows[0]; // ...the next music show is ALWAYS the first music show of the next week (first element of the array)
+            nextShow = musicShows[0]; // ...the next music show is ALWAYS the Monday's or Tuesday's music show (first element of the array)
             break;
         }
     }
