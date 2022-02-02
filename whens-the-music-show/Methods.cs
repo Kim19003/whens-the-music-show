@@ -192,7 +192,6 @@ namespace whens_the_music_show
                 }
                 else // Today
                 {
-                    Console.WriteLine((nextShow.StartTime - now).Days);
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.Write($"'{nextShow.Name}' airs today ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}! ");
                     Console.ForegroundColor = ConsoleColor.White;
@@ -431,7 +430,7 @@ namespace whens_the_music_show
                 else // Other error causes: outdated url format or outdated data source format
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"\n\nThe selected music show has not been added yet or the selected music show didn't air last time.");
+                    Console.WriteLine($"\n\nThe selected music show has not been added yet or the selected music show didn't air that time.");
                 }
 
                 //Console.ForegroundColor = ConsoleColor.Gray;
