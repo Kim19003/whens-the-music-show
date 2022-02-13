@@ -6,41 +6,41 @@ ProcessStartInfo psi = new();
 // -- Changeable --
 int timeZoneDifference = -7; // Change timezone difference here
 
-psi.FileName = @"C:\Program Files\Mozilla Firefox\firefox.exe"; // Change browser location here
+psi.FileName = @"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"; // Change browser location here
 // ----------------
 
-Classes TheShow = new Classes(
+MusicShow TheShow = new MusicShow(
         "The Show", "SBS",
         Methods.SimpleTime(DayOfWeek.Tuesday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(18, 00))),
         Methods.SimpleTime(DayOfWeek.Tuesday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(19, 30)))
     );
-Classes ShowChampion = new Classes(
+MusicShow ShowChampion = new MusicShow(
         "Show Champion", "MBC",
         Methods.SimpleTime(DayOfWeek.Wednesday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(18, 00))),
         Methods.SimpleTime(DayOfWeek.Wednesday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(19, 30)))
     );
-Classes MCountdown = new Classes(
+MusicShow MCountdown = new MusicShow(
         "M Countdown", "Mnet",
         Methods.SimpleTime(DayOfWeek.Thursday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(18, 00))),
         Methods.SimpleTime(DayOfWeek.Thursday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(19, 30)))
     );
-Classes MusicBank = new Classes(
+MusicShow MusicBank = new MusicShow(
         "Music Bank", "KBS",
         Methods.SimpleTime(DayOfWeek.Friday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(17, 00))),
         Methods.SimpleTime(DayOfWeek.Friday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(18, 30)))
     );
-Classes ShowMusicCore = new Classes(
+MusicShow ShowMusicCore = new MusicShow(
         "Show! Music Core", "MBC",
         Methods.SimpleTime(DayOfWeek.Saturday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(15, 45))),
         Methods.SimpleTime(DayOfWeek.Saturday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(17, 05)))
     );
-Classes Inkigayo = new Classes(
+MusicShow Inkigayo = new MusicShow(
         "Inkigayo", "SBS",
         Methods.SimpleTime(DayOfWeek.Sunday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(15, 40))),
         Methods.SimpleTime(DayOfWeek.Sunday, Methods.ConvertToTimeZone(timeZoneDifference, new Time(16, 50)))
     );
 
-Classes[] musicShows = { TheShow, ShowChampion, MCountdown, MusicBank, ShowMusicCore, Inkigayo };
+MusicShow[] musicShows = { TheShow, ShowChampion, MCountdown, MusicBank, ShowMusicCore, Inkigayo };
 
 List<Performance> performances = new();
 

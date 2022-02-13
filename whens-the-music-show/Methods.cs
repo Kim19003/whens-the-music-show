@@ -23,7 +23,7 @@ namespace whens_the_music_show
             Console.WriteLine("\n-------------------------\n");
         }
 
-        internal static void ShowAllMusicShows(Classes[] musicShows)
+        internal static void ShowAllMusicShows(MusicShow[] musicShows)
         {
             DateTime now = DateTime.Now;
 
@@ -117,14 +117,14 @@ namespace whens_the_music_show
             }
         }
 
-        internal static void ShowNextMusicShow(Classes[] musicShows)
+        internal static void ShowNextMusicShow(MusicShow[] musicShows)
         {
             DateTime now = DateTime.Now;
 
-            Classes? airingNow = null;
-            Classes? nextShow = null;
+            MusicShow? airingNow = null;
+            MusicShow? nextShow = null;
 
-            foreach (Classes musicShow in musicShows)
+            foreach (MusicShow musicShow in musicShows)
             {
                 if (musicShow.StartTime.DayOfWeek < now.DayOfWeek)
                 {
@@ -265,7 +265,7 @@ namespace whens_the_music_show
             return dayDifference;
         }
 
-        internal static async Task TryGetWinner(Classes[] musicShows, List<Performance> performances, ProcessStartInfo psi)
+        internal static async Task TryGetWinner(MusicShow[] musicShows, List<Performance> performances, ProcessStartInfo psi)
         {
             DateTime now = DateTime.Now;
 
@@ -438,7 +438,7 @@ namespace whens_the_music_show
             }
         }
 
-        internal static void GrabAndShowPerformers(Classes[] musicShows, List<Performance> performances, ProcessStartInfo psi, DateTime now, string data, int select)
+        internal static void GrabAndShowPerformers(MusicShow[] musicShows, List<Performance> performances, ProcessStartInfo psi, DateTime now, string data, int select)
         {
             List<string> _performers = data.Split("|", StringSplitOptions.TrimEntries).ToList<string>(),
             _stages = data.Split("| Song |", StringSplitOptions.TrimEntries).ToList<string>();
@@ -696,16 +696,27 @@ namespace whens_the_music_show
             }
         }
 
-        internal static void GrabAndShowWinner(Classes[] musicShows, DateTime now, string data, int select)
+        internal static void GrabAndShowWinner(MusicShow[] musicShows, DateTime now, string data, int select)
         {
-            string _winner = data[data.IndexOf("WINNER")..];
+            string _winner = "";
+            try { _winner = data[data.IndexOf("WINNER\r")..]; }
+            catch {
+                try { _winner = data[data.IndexOf("WINNER \r")..]; }
+                catch {
+                    try { _winner = data[data.IndexOf("WINNER")..]; }
+                    catch { return; }
+                }
+            }
             _winner = _winner[(_winner.IndexOf('[') + 1)..];
             _winner = _winner[.._winner.IndexOf(']')];
 
             string winner = _winner;
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Winner: {winner}\n");
+            if (winner != "")
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"Winner: {winner}\n");
+            }
         }
 
         internal static void AboutTheProgram(ProgramData programData)

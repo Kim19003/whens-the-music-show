@@ -22,14 +22,14 @@ namespace whens_the_music_show
         }
     }
 
-    internal class Classes
+    internal class MusicShow
     {
         internal string Name { get; set; }
         internal string Organizer { get; set; }
         internal DateTime StartTime { get; set; }
         internal DateTime EndTime { get; set; }
 
-        internal Classes(string name, string organizer, DateTime startTime, DateTime endTime)
+        internal MusicShow(string name, string organizer, DateTime startTime, DateTime endTime)
         {
             Name = name;
             Organizer = organizer;
