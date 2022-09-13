@@ -1,0 +1,44 @@
+[
+    {
+        "Name": "The Show",
+        "Organizer": "SBS MTV",
+        "AirDay": "Tuesday",
+        "StartTime": "18:00",
+        "EndTime": "19:30"
+    },
+    {
+        "Name": "Show Champion",
+        "Organizer": "MBC M",
+        "AirDay": "Wednesday",
+        "StartTime": "18:00",
+        "EndTime": "19:30"
+    },
+    {
+        "Name": "M Countdown",
+        "Organizer": "Mnet",
+        "AirDay": "Thursday",
+        "StartTime": "18:00",
+        "EndTime": "19:30"
+    },
+    {
+        "Name": "Music Bank",
+        "Organizer": "KBS 2TV",
+        "AirDay": "Friday",
+        "StartTime": "17:00",
+        "EndTime": "18:30"
+    },
+    {
+        "Name": "Show! Music Core",
+        "Organizer": "MBC",
+        "AirDay": "Saturday",
+        "StartTime": "15:45",
+        "EndTime": "17:05"
+    },
+    {
+        "Name": "Inkigayo",
+        "Organizer": "SBS",
+        "AirDay": "Sunday",
+        "StartTime": "15:40",
+        "EndTime": "16:50"
+    }
+]

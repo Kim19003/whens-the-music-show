@@ -2,6 +2,12 @@
 
 namespace whens_the_music_show
 {
+    internal class AppSettings
+    {
+        public string? DefaultBrowserPath { get; set; }
+        public int? DetailsCheckIntervalInDays { get; set; }
+    }
+
     internal class DllImport
     {
         [DllImport("User32")]
@@ -24,18 +30,20 @@ namespace whens_the_music_show
 
     internal class MusicShow
     {
-        internal string Name { get; set; }
-        internal string Organizer { get; set; }
-        internal DateTime StartTime { get; set; }
-        internal DateTime EndTime { get; set; }
+        public string? Name { get; set; }
+        public string? Organizer { get; set; }
+        public DayOfWeek AirDay { get; set; }
+        public DateTime StartTime { get; set; } = new DateTime(1920, 1, 1, 0, 0, 0);
+        public DateTime EndTime { get; set; } = new DateTime(1920, 1, 1, 0, 0, 0);
+    }
 
-        internal MusicShow(string name, string organizer, DateTime startTime, DateTime endTime)
-        {
-            Name = name;
-            Organizer = organizer;
-            StartTime = startTime;
-            EndTime = endTime;
-        }
+    internal class MusicShowRaw
+    {
+        public string? Name { get; set; }
+        public string? Organizer { get; set; }
+        public DayOfWeek AirDay { get; set; }
+        public string? StartTime { get; set; }
+        public string? EndTime { get; set; }
     }
 
     internal class Performance

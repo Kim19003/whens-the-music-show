@@ -1,107 +1,93 @@
 ﻿using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace whens_the_music_show
 {
     internal class Methods
     {
-        internal static void Header()
+        internal static void Header(string pageTitle)
         {
-            DateTime now = DateTime.Now;
-
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine("-------------------------");
-            Console.WriteLine("| When's the music show |");
-            Console.WriteLine("-------------------------");
+            Console.Write("WHEN'S THE MUSIC SHOW!?\n");
 
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.Write("\nTime now: ");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write($"{now:g}\n");
-
-            Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("\n-------------------------\n");
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.WriteLine($"> {pageTitle}\n\n");
         }
 
         internal static void ShowAllMusicShows(MusicShow[] musicShows)
         {
             DateTime now = DateTime.Now;
 
-            int hoursFromNow = 0, daysFromNow = 0;
+            int hoursFromNow, daysFromNow;
 
             for (int i = 0; i < musicShows.Length - 1; i++)
             {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine($"{musicShows[i].StartTime.DayOfWeek}: ");
-
                 if (musicShows[i].StartTime.DayOfWeek == now.DayOfWeek)
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.ForegroundColor = ConsoleColor.Magenta;
 
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
 
                 hoursFromNow = (musicShows[i].StartTime - now).Hours;
                 daysFromNow = (musicShows[i].StartTime - now).Days;
 
-                Console.Write($"{musicShows[i].Name} ({musicShows[i].StartTime:g}) ");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write($"{musicShows[i].Name} ({musicShows[i].StartTime:dddd}, {musicShows[i].StartTime.ToString("t").Replace(".", ":")}) ");
+                Console.ForegroundColor = ConsoleColor.Gray;
 
                 if (hoursFromNow < 0)
                 {
                     if (daysFromNow < 0)
                     {
-                        Console.WriteLine($"— {Math.Abs(daysFromNow)} day(s) and {Math.Abs(hoursFromNow)} hour(s) ago\n");
+                        Console.WriteLine($"— {Math.Abs(daysFromNow)} day(s) and {Math.Abs(hoursFromNow)} hour(s) ago");
                     }
                     else
                     {
-                        Console.WriteLine($"— {Math.Abs(hoursFromNow)} hour(s) ago\n");
+                        Console.WriteLine($"— {Math.Abs(hoursFromNow)} hour(s) ago");
                     }
                 }
                 else
                 {
                     if (daysFromNow < 1)
                     {
-                        Console.WriteLine($"— {hoursFromNow} hour(s) from now\n");
+                        Console.WriteLine($"— {hoursFromNow} hour(s) from now");
                     }
                     else
                     {
-                        Console.WriteLine($"— {daysFromNow} day(s) and {hoursFromNow} hour(s) from now\n");
+                        Console.WriteLine($"— {daysFromNow} day(s) and {hoursFromNow} hour(s) from now");
                     }
                 }
             }
 
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"{musicShows[^1].StartTime.DayOfWeek}: ");
-
             if (musicShows[^1].StartTime.DayOfWeek == now.DayOfWeek)
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.ForegroundColor = ConsoleColor.Magenta;
 
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.White;
             }
 
             hoursFromNow = (musicShows[^1].StartTime - now).Hours;
             daysFromNow = (musicShows[^1].StartTime - now).Days;
 
-            Console.Write($"{musicShows[^1].Name} ({musicShows[^1].StartTime:g}) ");
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write($"{musicShows[^1].Name} ({musicShows[^1].StartTime:dddd}, {musicShows[^1].StartTime.ToString("t").Replace(".", ":")}) ");
+            Console.ForegroundColor = ConsoleColor.Gray;
 
             if (hoursFromNow < 0)
             {
                 if (daysFromNow < 0)
                 {
-                    Console.WriteLine($"— {Math.Abs(daysFromNow)} day(s) and {Math.Abs(hoursFromNow)} hour(s) ago\n");
+                    Console.WriteLine($"— {Math.Abs(daysFromNow)} day(s) and {Math.Abs(hoursFromNow)} hour(s) ago");
                 }
                 else
                 {
-                    Console.WriteLine($"— {Math.Abs(hoursFromNow)} hour(s) ago\n");
+                    Console.WriteLine($"— {Math.Abs(hoursFromNow)} hour(s) ago");
                 }
             }
             else
@@ -115,6 +101,8 @@ namespace whens_the_music_show
                     Console.WriteLine($"— {daysFromNow} day(s) and {hoursFromNow} hour(s) from now");
                 }
             }
+
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         internal static void ShowNextMusicShow(MusicShow[] musicShows)
@@ -160,7 +148,7 @@ namespace whens_the_music_show
                 int hoursAgo = (now - airingNow.StartTime).Hours;
                 int minutesAgo = (now - airingNow.StartTime).Minutes;
 
-                Console.ForegroundColor = ConsoleColor.Green;
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 if (hoursAgo < 1)
                 {
                     Console.WriteLine($"'{airingNow.Name}' is airing right now! (started {minutesAgo} minute(s) ago)");
@@ -178,23 +166,23 @@ namespace whens_the_music_show
 
                 if (daysFromNow > 1) // In two days
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write($"'{nextShow.Name}' airs next {nextShow.StartTime.DayOfWeek} at {nextShow.StartTime:t}! ");
                     Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($"'{nextShow.Name}' airs next {nextShow.StartTime:dddd} at {nextShow.StartTime:t}! ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine($"— {daysFromNow} day(s) and {hoursFromNow} hour(s) and {minutesFromNow} minute(s) from now");
                 }
                 else if (now.DayOfWeek != nextShow.StartTime.DayOfWeek) // Tomorrow
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.Write($"'{nextShow.Name}' airs tomorrow ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}! ");
                     Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write($"'{nextShow.Name}' airs tomorrow ({nextShow.StartTime:dddd}) at {nextShow.StartTime:t}! ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine($"— {hoursFromNow} hour(s) and {minutesFromNow} minute(s) from now");
                 }
                 else // Today
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.Write($"'{nextShow.Name}' airs today ({nextShow.StartTime.DayOfWeek}) at {nextShow.StartTime:t}! ");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.Write($"'{nextShow.Name}' airs today ({nextShow.StartTime:dddd}) at {nextShow.StartTime:t}! ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     if (hoursFromNow < 1)
                     {
                         Console.WriteLine($"— {minutesFromNow} minute(s) from now");
@@ -205,11 +193,13 @@ namespace whens_the_music_show
                     }
                 }
             }
+
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         internal static DateTime SimpleTime(DayOfWeek dayOfWeek, Time time)
         {
-            DateTime nextWeek = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, time.Hour, time.Minute, 00);
+            DateTime nextWeek = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, time.Hour, time.Minute, 00);
 
             if (time.GetDayDifference() == 1) // Can't be more than 1 in real life
             {
@@ -245,10 +235,9 @@ namespace whens_the_music_show
 
         internal static int GetDaysToNextDay(DayOfWeek dayOfWeek)
         {
-            DateTime now = DateTime.Now;
             int dayDifference = 0;
 
-            if (now.DayOfWeek != dayOfWeek)
+            if (DateTime.Now.DayOfWeek != dayOfWeek)
             {
                 DateTime result = DateTime.Now.AddDays(1);
                 dayDifference++;
@@ -258,40 +247,38 @@ namespace whens_the_music_show
                     result = result.AddDays(1);
                     dayDifference++;
                 }
-
-                return dayDifference;
             }
 
             return dayDifference;
         }
 
-        internal static async Task TryGetWinner(MusicShow[] musicShows, List<Performance> performances, ProcessStartInfo psi)
+        internal static async Task ShowMusicShowPerformancesAndWinner(MusicShow[] musicShows, List<Performance> performances, ProcessStartInfo psi)
         {
             DateTime now = DateTime.Now;
 
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Select the music show to show performances and winner from (within a week)\n");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Select the music show to show performances and winner from (within a week):\n");
 
             bool today = false;
 
             for (int i = 0; i < musicShows.Length; i++)
             {
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write($"({i + 1}) ");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write($"[{i + 1}] ");
 
                 if (now.DayOfWeek == musicShows[i].EndTime.DayOfWeek)
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.ForegroundColor = ConsoleColor.Magenta;
                     today = true;
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
 
-                Console.Write($"{musicShows[i].Name} ({musicShows[i].EndTime.DayOfWeek}) ");
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.Write($"{musicShows[i].Name} ({musicShows[i].EndTime:dddd}) ");
 
+                Console.ForegroundColor = ConsoleColor.Gray;
                 if (today)
                 {
                     Console.WriteLine($"— today");
@@ -304,12 +291,12 @@ namespace whens_the_music_show
                 }
             }
 
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Gray;
             ConsoleKey selection = Console.ReadKey().Key;
 
-            string? eventToShow = null;
+            int select;
 
-            int select = 0;
+            string? eventToShow;
             switch (selection)
             {
                 case ConsoleKey.D1:
@@ -397,35 +384,39 @@ namespace whens_the_music_show
                 string? data = content?.data.content_md;
 
                 Console.Clear();
-                Header();
+                Header("Show music show performances");
 
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Gray;
                 Console.Write("Selected ");
-                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.Write($"{musicShows[select - 1].Name} ");
 
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Gray;
                 if (musicShows[select - 1].StartTime.DayOfWeek != now.DayOfWeek)
                 {
                     DateTime weekAgo = musicShows[select - 1].EndTime.AddDays(-7);
-                    Console.Write($"(aired {weekAgo:d})\n");
+                    Console.Write($"(aired {weekAgo:d}, winner: ");
+
                 }
                 else
                 {
-                    Console.Write("(aired today)\n");
+                    Console.Write($"(aired today, winner: ");
                 }
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                Console.Write($"{GrabWinner(data ?? "")}");
 
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine("\nChoose the performance to show (opens YouTube in your browser) ('Escape' or 'Enter' to end)");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write($")\n\n");
+                //Console.WriteLine("\n\nChoose the performance to show (favorites are highlighted):");
 
-                GrabAndShowPerformers(musicShows, performances, psi, now, data, select);
+                GrabAndShowPerformers(performances, psi, data ?? "");
             }
             catch (Exception ex)
             {
                 if (ex is InvalidOperationException || ex is HttpRequestException || ex is TaskCanceledException) // Other error causes: ?
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"\n\nConnection issues.");
+                    Console.WriteLine($"\n\nNetwork issue occurred.");
                 }
                 else // Other error causes: outdated url format or outdated data source format
                 {
@@ -438,13 +429,22 @@ namespace whens_the_music_show
             }
         }
 
-        internal static void GrabAndShowPerformers(MusicShow[] musicShows, List<Performance> performances, ProcessStartInfo psi, DateTime now, string data, int select)
+        internal static void GrabAndShowPerformers(List<Performance> performances, ProcessStartInfo psi, string data)
         {
-            List<string> _performers = data.Split("|", StringSplitOptions.TrimEntries).ToList<string>(),
-            _stages = data.Split("| Song |", StringSplitOptions.TrimEntries).ToList<string>();
+            string[] favorites;
+            try
+            {
+                favorites = File.ReadAllLines(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Favorites.txt"));
+            }
+            catch
+            {
+                favorites = Array.Empty<string>();
+            }
 
-            string[] stageNames = { "Special Stage", "Special Stages", "Debut Stages", "Comeback Stages",
-            "Hot Stages" };
+            List<string> _performers = data.Split("|", StringSplitOptions.TrimEntries).ToList(),
+            _stages = data.Split("| Song |", StringSplitOptions.TrimEntries).ToList();
+
+            string[] stageNames = { "Special Stage", "Special Stages", "Debut Stages", "Comeback Stages", "Hot Stages" };
 
             for (int i = 0; i < _performers.Count; i++)
             {
@@ -467,13 +467,9 @@ namespace whens_the_music_show
 
 
                         // Blacklist song names
-                        && !_performers[i + 1].StartsWith("[Link]")
-                        && !_performers[i + 1].StartsWith("[link]")
-                        && !_performers[i + 1].StartsWith("[YouTube]")
-                        && !_performers[i + 1].StartsWith("[Youtube]")
-                        && !_performers[i + 1].StartsWith("[youtube]")
-                        && !_performers[i + 1].StartsWith("[Naver]")
-                        && !_performers[i + 1].StartsWith("[naver]")
+                        && !_performers[i + 1].ToLower().StartsWith("[link]")
+                        && !_performers[i + 1].ToLower().StartsWith("[youtube]")
+                        && !_performers[i + 1].ToLower().StartsWith("[naver]")
 
                         // Whitelist song names
                         && _performers[i + 1].StartsWith("[")
@@ -514,7 +510,7 @@ namespace whens_the_music_show
                 {
                     try
                     {
-                        if (_stages[i + 1].Contains(performance.Artist) && _stages[i + 1].Contains(performance.Song))
+                        if (_stages[i + 1].Contains(performance.Artist ?? "(((NOT SET)))") && _stages[i + 1].Contains(performance.Song ?? "(((NOT SET)))"))
                         {
                             foreach (string stageName in stageNames)
                             {
@@ -535,8 +531,6 @@ namespace whens_the_music_show
 
             Console.WriteLine("");
 
-            GrabAndShowWinner(musicShows, now, data, select);
-
             char[] keys = { 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M' };
 
             string currentStageName = "";
@@ -545,41 +539,61 @@ namespace whens_the_music_show
             {
                 if (performances[i].Stage != currentStageName)
                 {
-                    currentStageName = performances[i].Stage;
+                    currentStageName = performances[i]?.Stage ?? "Unknown Stage";
 
-                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     if (i > 0)
                     {
                         Console.WriteLine("");
                     }
-                    Console.WriteLine($"-- {currentStageName} --");
+                    Console.WriteLine($"{currentStageName.ToUpper()}:\n");
                 }
 
                 if (i < keys.Length)
                 {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.Write($"({keys[i]}) ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Write($"[{keys[i]}] ");
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine($"(NOT SET) ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.WriteLine($"[(((NOT SET)))] ");
                 }
 
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                if (performances[i].Artist != "")
+                Console.ForegroundColor = ConsoleColor.White;
+                if (!string.IsNullOrWhiteSpace(performances[i].Artist) && !(performances[i].Artist ?? "").Contains('ㅤ'))
                 {
+                    foreach (string favorite in favorites)
+                    {
+                        if ((performances[i].Artist ?? "(((NOT SET)))").ToLower().Contains(favorite))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+
+                            break;
+                        }
+                    }
+
                     Console.WriteLine($"{performances[i].Artist} - {performances[i].Song}");
                 }
                 else
                 {
+                    foreach (string favorite in favorites)
+                    {
+                        if ((performances[i - 1].Artist ?? "(((NOT SET)))").ToLower().Contains(favorite))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Magenta;
+
+                            break;
+                        }
+                    }
+
                     Console.WriteLine($"{performances[i - 1].Artist} - {performances[i].Song}");
                 }
             }
 
             while (true)
             {
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.Gray;
                 ConsoleKey selection = Console.ReadKey().Key;
 
                 bool dontStartProcess = false;
@@ -696,43 +710,62 @@ namespace whens_the_music_show
             }
         }
 
-        internal static void GrabAndShowWinner(MusicShow[] musicShows, DateTime now, string data, int select)
+        internal static string GrabWinner(string data)
         {
-            string _winner = "";
-            try { _winner = data[data.IndexOf("WINNER\r")..]; }
+            string winner;
+            try { winner = data[data.IndexOf("WINNER\r")..]; }
             catch {
-                try { _winner = data[data.IndexOf("WINNER \r")..]; }
+                try { winner = data[data.IndexOf("WINNER \r")..]; }
                 catch {
-                    try { _winner = data[data.IndexOf("WINNER")..]; }
-                    catch { return; }
+                    try { winner = data[data.IndexOf("WINNER")..]; }
+                    catch {
+                        return string.Empty;
+                    }
                 }
             }
-            _winner = _winner[(_winner.IndexOf('[') + 1)..];
-            _winner = _winner[.._winner.IndexOf(']')];
+            winner = winner[(winner.IndexOf('[') + 1)..];
+            winner = winner[..winner.IndexOf(']')];
 
-            string winner = _winner;
-
-            if (winner != "")
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Winner: {winner}\n");
-            }
+            return winner;
         }
 
         internal static void AboutTheProgram(ProgramData programData)
         {
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write("Data source used for getting the music show data: ");
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Write(@"https://www.reddit.com/r/kpop/wiki/music-shows" + "\n");
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write("\nVersion: ");
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write($"{String.Format("{0:0.0}", programData.Version).Replace(',', '.')}" + "\n");
             Console.ForegroundColor = ConsoleColor.White;
+            Console.Write($"{String.Format("{0:0.0}", programData.Version).Replace(',', '.')}" + "\n");
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write("Creator: ");
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.Write($"{programData.Creator}" + "\n");
+        }
+
+        internal static int GetTimeZoneDifference(string timeZoneId)
+        {
+            TimeZoneInfo timeZoneInfo = TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            DateTimeOffset localServerTimeOffset = DateTimeOffset.Now;
+            DateTimeOffset localTimeOffset = TimeZoneInfo.ConvertTime(localServerTimeOffset, timeZoneInfo);
+
+            return (localServerTimeOffset.DateTime - localTimeOffset.DateTime).Hours;
+        }
+
+        internal static MusicShow ConvertToMusicShow(MusicShowRaw musicShowRaw)
+        {
+            return new()
+            {
+                Name = musicShowRaw.Name,
+                Organizer = musicShowRaw.Organizer,
+                AirDay = musicShowRaw.AirDay,
+                StartTime = new(1920, 1, 1, Convert.ToInt32(musicShowRaw.StartTime?[..musicShowRaw.StartTime.IndexOf(':')]),
+                    Convert.ToInt32(musicShowRaw.StartTime?[(musicShowRaw.StartTime.IndexOf(':') + 1)..]), 0),
+                EndTime = new(1920, 1, 1, Convert.ToInt32(musicShowRaw.EndTime?[..musicShowRaw.EndTime.IndexOf(':')]),
+                    Convert.ToInt32(musicShowRaw.EndTime?[(musicShowRaw.EndTime.IndexOf(':') + 1)..]), 0)
+            };
         }
     }
 }
